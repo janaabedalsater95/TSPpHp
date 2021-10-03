@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OwnerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Owner
      * @ORM\Column(type="string", length=255)
      */
     private $country;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Room::class, mappedBy="owner")
+     */
+    private $summary;
+
+    public function __construct()
+    {
+        $this->summary = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +98,36 @@ class Owner
     public function setCountry(string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Room[]
+     */
+    public function getSummary(): Collection
+    {
+        return $this->summary;
+    }
+
+    public function addSummary(Room $summary): self
+    {
+        if (!$this->summary->contains($summary)) {
+            $this->summary[] = $summary;
+            $summary->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSummary(Room $summary): self
+    {
+        if ($this->summary->removeElement($summary)) {
+            // set the owning side to null (unless already changed)
+            if ($summary->getOwner() === $this) {
+                $summary->setOwner(null);
+            }
+        }
 
         return $this;
     }
