@@ -56,7 +56,7 @@ class Room
     private $address;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Region::class, mappedBy="room")
+     * @ORM\ManyToMany(targetEntity=Region::class, mappedBy="room", orphanRemoval=false, cascade={"persist"})
      */
     private $regions;
 

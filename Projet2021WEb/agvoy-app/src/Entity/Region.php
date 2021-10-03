@@ -35,7 +35,7 @@ class Region
     private $country;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Room::class, inversedBy="regions")
+     * @ORM\ManyToMany(targetEntity=Room::class, inversedBy="regions",  orphanRemoval=false,cascade={"persist"} )
      */
     private $room;
 
