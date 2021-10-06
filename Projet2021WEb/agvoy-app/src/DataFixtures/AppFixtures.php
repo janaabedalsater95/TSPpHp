@@ -56,9 +56,27 @@ class AppFixtures extends Fixture
         // enregistrée précédamment, ce qui permet d'éviter de se
         // tromper d'instance de Region :
        $room->addRegion($this->getReference(self::IDF_REGION_REFERENCE));
-        $manager->persist($room);
-        
+       $manager->persist($room);
+       $manager->flush();
        
-        $manager->flush();
+       //2eme room
+       $room = new Room();
+       $room->setSummary("Beau poulailler ancien à versaille");
+       $room->setDescription("très joli espace proche a paris");
+       $room->setCapacity('4');
+       $room->setAddress("versaille");
+       $room->setPrice("200");
+       $room->setSuperficy('60.5');
+       
+       $room->setOwner($owner);
+       //$room->addRegion($region);
+       // On peut plutôt faire une référence explicite à la référence
+       // enregistrée précédamment, ce qui permet d'éviter de se
+       // tromper d'instance de Region :
+       $room->addRegion($this->getReference(self::IDF_REGION_REFERENCE));
+       $manager->persist($room);
+       $manager->flush();
+       
+       
     }
 }
