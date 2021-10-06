@@ -12,7 +12,7 @@
 <h1>Room index</h1>
 
 <ul>
-  
+  {% for room in rooms %}
  
   
   <table class="table">
@@ -21,6 +21,7 @@
             <th>Id</th>
             <th>Address</th>
             <th>Capacity</th>
+            <th> Owner </th>
             
           
         </tr>
@@ -31,17 +32,17 @@
             <td>{{ room.id }}</td>
             <td>{{ room.address }}</td>
             <td>{{ room.capacity }}</td>
-           
+           <td>{{ owner}}</td>
+              <td><a href="{{ path('room_show', {'id': room.id}) }}">show</a></td>
             
         </tr>
 
     </tbody>
 </table>
-   <a href="{{ path('room_index') }}">back to list</a>
   
   
   
-
+  {% endfor %} 
 </ul>
 
 

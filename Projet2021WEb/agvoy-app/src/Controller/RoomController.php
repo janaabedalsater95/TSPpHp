@@ -32,11 +32,22 @@ class RoomController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $rooms = $em->getRepository(Room::class)->findAll();
         
-        return $this->render('room/showRoom.html.twig',
+        return $this->render('room/ListRooms.html.twig',
             [ 'rooms' => $rooms ,'owner'=> "Jana"]
             );
         
         
+    }
+    /**
+     * Finds and displays a todo entity.
+     *
+     * @Route("/{id}", name="room_show", requirements={ "id": "\d+"}, methods="GET")
+     */
+    public function showAction(Room $room): Response
+    {
+        return $this->render('room/showRoom.html.twig',
+            [ 'room' => $room]
+            );
     }
     
     
