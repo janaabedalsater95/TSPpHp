@@ -181,6 +181,8 @@ class Room
         return $this;
     }
     public function __toString() {
-        return $this->summary. " " .$this->description. " ".$this->address.  " (" . $this->id . ")" ;
+        $owner= $this->getOwner();
+        $ownerName = $owner->getName();
+        return $this->summary. " " .$this->description. " ".$this->address. " ". $ownerName   ." (" . $this->id . ")" ;
     }
 }

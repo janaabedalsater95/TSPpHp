@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Room;
+use App\Entity\Owner;
+
+class RoomController extends AbstractController
+{
+    /**
+     * @Route("/room", name="room")
+     */
+    public function index(): Response
+    {
+        return $this->render('room/index.html.twig', [
+            'controller_name' => 'RoomController',
+        ]);
+    }
+    
+    /**
+     * Lists all rooms 
+     *
+     * @Route("/list", name = "room_list", methods="GET")
+     * @Route("/index", name="room_index", methods="GET")
+     */
+    public function listAction()
+    {
+      
+        $em = $this->getDoctrine()->getManager();
+        $rooms = $em->getRepository(Room::class)->findAll();
+        
+        return $this->render('room/showRoom.html.twig',
+            [ 'rooms' => $rooms ,'owner'=> "Jana"]
+            );
+        
+        
+    }
+    
+    
+}
