@@ -1,0 +1,10 @@
+bootstrap_menu:
+  menus:
+    main:
+      items:
+        todos:
+          label: 'List des room'
+          route: 'room_list'
+        actives:
+          label: 'Active tasks'
+          route: 'room'

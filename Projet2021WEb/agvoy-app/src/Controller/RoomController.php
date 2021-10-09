@@ -11,7 +11,7 @@ use App\Entity\Owner;
 class RoomController extends AbstractController
 {
     /**
-     * @Route("/room", name="room")
+     * @Route("/", name="room")
      */
     public function index(): Response
     {
@@ -33,7 +33,7 @@ class RoomController extends AbstractController
         $rooms = $em->getRepository(Room::class)->findAll();
         
         return $this->render('room/ListRooms.html.twig',
-            [ 'rooms' => $rooms ,'owner'=> "Jana"]
+            [ 'rooms' => $rooms ]
             );
         
         
