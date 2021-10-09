@@ -11,7 +11,7 @@ use App\Entity\Owner;
 class RoomController extends AbstractController
 {
     /**
-     * @Route("/", name="room")
+     * @Route("/", name="home")
      */
     public function index(): Response
     {
@@ -38,6 +38,8 @@ class RoomController extends AbstractController
         
         
     }
+    
+    
     /**
      * Finds and displays a todo entity.
      *
