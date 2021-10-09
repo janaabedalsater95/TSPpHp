@@ -19,8 +19,8 @@ class AppFixtures extends Fixture
         $owner= new Owner();
         $owner->setName("jana");
         $owner->setFamilyName("Abedalsater");
-        $owner->setAddress("versaille");
-        $owner->setCountry("paris");
+      $owner->setAddress("versaille");
+       $owner->setCountry("paris");
         
         $manager->persist($owner);
         
