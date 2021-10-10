@@ -131,4 +131,7 @@ class Owner
 
         return $this;
     }
+    public function __toString() {
+        return $this->name. " " .$this->address. " ".$this->country. " ".$this->familyName. " (" . $this->id . ")" ;
+    }
 }

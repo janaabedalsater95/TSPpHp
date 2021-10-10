@@ -6,9 +6,12 @@ use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use phpDocumentor\Reflection\File;
 
 /**
  * @ORM\Entity(repositoryClass=RoomRepository::class)
+ *  @Vich\Uploadable
  */
 class Room
 {
@@ -56,9 +59,10 @@ class Room
     private $address;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Region::class, mappedBy="room")
+     * @ORM\ManyToMany(targetEntity=Region::class, mappedBy="room", orphanRemoval=false, cascade={"persist"})
      */
     private $regions;
+ 
 
     public function __construct()
     {
@@ -71,7 +75,8 @@ class Room
     }
 
     public function getOwner(): ?Owner
-    {
+    {   
+        
         return $this->owner;
     }
 
@@ -179,5 +184,10 @@ class Room
         }
 
         return $this;
+    }
+    public function __toString() {
+        $owner= $this->getOwner();
+        $ownerName = $owner->getName();
+        return $this->summary. " " .$this->description. " ".$this->address. " ". $ownerName   ." (" . $this->id . ")" ;
     }
 }

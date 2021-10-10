@@ -35,7 +35,7 @@ class Region
     private $country;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Room::class, inversedBy="regions")
+     * @ORM\ManyToMany(targetEntity=Room::class, inversedBy="regions",  orphanRemoval=false,cascade={"persist"} )
      */
     private $room;
 
@@ -107,5 +107,8 @@ class Region
         $this->room->removeElement($room);
 
         return $this;
+    }
+    public function __toString() {
+        return $this->name. " " .$this->presentation. " ".$this->country.  " (" . $this->id . ")" ;
     }
 }
