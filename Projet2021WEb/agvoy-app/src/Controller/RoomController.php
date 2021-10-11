@@ -60,23 +60,22 @@ class RoomController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $room = new Room();
-       
-       
-        $form = $this->createForm(RoomType::class, $room,
-           ['task_is_new' => true]);
+        $room= new Room();
+        $form = $this->createForm(RoomType::class, $room);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Change content-type according to image's
+            $imagefile = $room->getImageFile();
+            if($imagefile) {
+                $mimetype = $imagefile->getMimeType();
+                $room->setContentType($mimetype);
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($room);
             $entityManager->flush();
-            
-            // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'bien ajouté');
-            
-            
-            return $this->redirectToRoute('room_index', [], Response::HTTP_SEE_OTHER);
         }
         
         return $this->render('room/new.html.twig', [
@@ -119,5 +118,30 @@ class RoomController extends AbstractController
         return $this->redirectToRoute('room_index', [], Response::HTTP_SEE_OTHER);
     }
     
+    /**
+     * Mark a task as current priority in the user's session
+     *
+     * @Route("/mark/{id}", name="room_mark", requirements={ "id": "\d+"}, methods="GET")
+     */
+    public function markAction(Room $room): Response
+    {
+        dump($room);
+        // si l'identifiant n'est pas présent dans le tableau des urgents, l'ajouter
+        $id= $room->getId();
+        $urgents = array();
+        if (! in_array($id, $urgents) )
+        {
+            $urgents[] = $id;
+            $this->get('session')->set('urgents', $urgents);
+        }
+        else
+        // sinon, le retirer du tableau
+        {
+            $urgents = array_diff($urgents, array($id));
+            $urgents = $this->get('session')->get('urgents');
+        }
+        return $this->redirectToRoute('room_show',
+            ['id' => $room->getId()]);
+    }
     
 }

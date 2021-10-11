@@ -22,6 +22,10 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request = Request::createFromGlobals();
+error_log('debut '. $request->getRequestUri());
+
 $response = $kernel->handle($request);
 $response->send();
+
 $kernel->terminate($request, $response);
+error_log('fin '. $request->getRequestUri());
