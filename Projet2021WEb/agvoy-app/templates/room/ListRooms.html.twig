@@ -16,23 +16,30 @@
          <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <img src="{{ vich_uploader_asset(room, 'imageFile') }}"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
                                     <h5 class="fw-bolder">{{ room.description }}</h5>
-                                    <h6 >{{ room.id }}
+                                    <h6 >{{ room.price }}$</h6>
+                                   
                                     <!-- Product price-->
                                     
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('room_show', {'id': room.id}) }}">View options</a></div>
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('room_edit', {'id': room.id}) }}">Edit</a></div>
-                           <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('room_delete', {'id': room.id}) }}">Delete</a></div>
-                           
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('room_show', {'id': room.id}) }}">Details</a></div>
+                            	{% if is_granted('ROLE_USER') %}
+  								     <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{{ path('room_edit', {'id': room.id}) }}">Edit</a></div>
+                           		
+                                {% endif %}
+                            	
+                            	{% if is_granted('ROLE_ADMIN') %}
+                                         {{ include('room/_delete_form.html.twig') }}
+                          
+                                {% endif %}
                             </div>
                         </div>
                     </div>

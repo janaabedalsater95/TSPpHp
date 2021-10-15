@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
         // $manager->persist($product);
         
         $owner= new Owner();
-        $owner->setName("jana");
+        $owner->setName("janna");
         $owner->setFamilyName("Abedalsater");
       $owner->setAddress("versaille");
        $owner->setCountry("paris");
@@ -26,8 +26,18 @@ class AppFixtures extends Fixture
         
         $manager->flush();
         
-        $ownerId=$owner->getId();
+        $owner= new Owner();
+        $owner->setName("oliver");
+        $owner->setFamilyName("php");
+        $owner->setAddress("versaille");
+        $owner->setCountry("paris");
         
+        $manager->persist($owner);
+        
+        $manager->flush();
+        
+        $ownerId=$owner->getId();
+        //1ere region
         $region = new Region();
         $region->setCountry("FR");
         $region->setName("Ile de France");
@@ -40,6 +50,11 @@ class AppFixtures extends Fixture
         // donc être sauvegardée comme future référence.
         $this->addReference(self::IDF_REGION_REFERENCE, $region);
         
+        
+        
+        
+        
+        
         // ...
         
         $room = new Room();
@@ -48,6 +63,7 @@ class AppFixtures extends Fixture
         $room->setCapacity('3');
         $room->setAddress("versaille");
         $room->setPrice("100");
+       // $room->setImageFile('/Projet2021WEb/agvoy-app/public/images/rooms/1.jpeg');
         $room->setSuperficy('50.2');
         
         $room->setOwner($owner);
@@ -60,6 +76,7 @@ class AppFixtures extends Fixture
        $manager->flush();
        
        //2eme room
+       $imgsrc ="/Projet2021WEb/agvoy-app/public/images/rooms/1.jpeg";
        $room = new Room();
        $room->setSummary("Beau poulailler ancien à versaille");
        $room->setDescription("très joli espace proche a paris");
@@ -67,7 +84,7 @@ class AppFixtures extends Fixture
        $room->setAddress("versaille");
        $room->setPrice("200");
        $room->setSuperficy('60.5');
-       
+
        $room->setOwner($owner);
        //$room->addRegion($region);
        // On peut plutôt faire une référence explicite à la référence

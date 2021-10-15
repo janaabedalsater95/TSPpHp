@@ -2,6 +2,6 @@ vich_uploader:
     db_driver: orm
 
     mappings:
-        products:
-            uri_prefix: /images/products
-            upload_destination: '%kernel.project_dir%/public/images/products'
+        rooms:
+            uri_prefix: /images/rooms
+            upload_destination: '/home/jana/git/TSPpHp/Projet2021WEb/agvoy-app/public/images/rooms'

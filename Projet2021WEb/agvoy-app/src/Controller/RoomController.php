@@ -7,19 +7,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Form\RoomType;
 use App\Entity\Region;
 
 class RoomController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * 
+     * @Route("/", name="home",methods="GET")
      */
     public function index(): Response
     {
+        
+        $em = $this->getDoctrine()->getManager();
+        $regions = $em->getRepository(Region::class)->findAll();
+       
         return $this->render('room/index.html.twig', [
-            'controller_name' => 'RoomController',
+            'regions' => $regions,
         ]);
     }
     
@@ -60,23 +65,22 @@ class RoomController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $room = new Room();
-       
-       
-        $form = $this->createForm(RoomType::class, $room,
-           ['task_is_new' => true]);
+        $room= new Room();
+        $form = $this->createForm(RoomType::class, $room);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            // Change content-type according to image's
+            $imagefile = $room->getImageFile();
+            if($imagefile) {
+                $mimetype = $imagefile->getMimeType();
+               // $room->setContentType($mimetype);
+            }
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($room);
             $entityManager->flush();
-            
-            // Make sure message will be displayed after redirect
-            $this->get('session')->getFlashBag()->add('message', 'bien ajouté');
-            
-            
-            return $this->redirectToRoute('room_index', [], Response::HTTP_SEE_OTHER);
         }
         
         return $this->render('room/new.html.twig', [
@@ -87,6 +91,7 @@ class RoomController extends AbstractController
     
     /**
      * @Route("/{id}/edit", name="room_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Room $room): Response
     {
@@ -106,7 +111,7 @@ class RoomController extends AbstractController
     }
     
     /**
-     * @Route("/{id}", name="room_delete", methods={"POST"})
+     * @Route("/{id}", name="room_delete", requirements={ "id": "\d+"}, methods={"POST"})
      */
     public function delete(Request $request, Room $room): Response
     {
@@ -119,5 +124,32 @@ class RoomController extends AbstractController
         return $this->redirectToRoute('room_index', [], Response::HTTP_SEE_OTHER);
     }
     
+    /**
+     * Mark a task as current priority in the user's session
+     *
+     * @Route("/mark/{id}", name="room_mark", requirements={ "id": "\d+"}, methods="GET")
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function markAction(Room $room): Response
+    {
+        dump($room);
+        // si l'identifiant n'est pas présent dans le tableau des urgents, l'ajouter
+        $id= $room->getId();
+        $urgents = array();
+        if (! in_array($id, $urgents) )
+        {
+            $urgents[] = $id;
+            $this->get('session')->set('urgents', $urgents);
+        }
+        else
+        // sinon, le retirer du tableau
+        {
+            $urgents = array_diff($urgents, array($id));
+            $urgents = $this->get('session')->get('urgents');
+        }
+        dump($this->get('session')->get('urgents'));
+        return $this->redirectToRoute('room_show',
+            ['id' => $room->getId()]);
+    }
     
 }
