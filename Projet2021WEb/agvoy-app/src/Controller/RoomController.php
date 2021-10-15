@@ -7,19 +7,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Form\RoomType;
 use App\Entity\Region;
 
 class RoomController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * 
+     * @Route("/", name="home",methods="GET")
      */
     public function index(): Response
     {
+        
+        $em = $this->getDoctrine()->getManager();
+        $regions = $em->getRepository(Region::class)->findAll();
+       
         return $this->render('room/index.html.twig', [
-            'controller_name' => 'RoomController',
+            'regions' => $regions,
         ]);
     }
     
@@ -70,7 +75,7 @@ class RoomController extends AbstractController
             $imagefile = $room->getImageFile();
             if($imagefile) {
                 $mimetype = $imagefile->getMimeType();
-                $room->setContentType($mimetype);
+               // $room->setContentType($mimetype);
             }
             
             $entityManager = $this->getDoctrine()->getManager();
@@ -86,6 +91,7 @@ class RoomController extends AbstractController
     
     /**
      * @Route("/{id}/edit", name="room_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Room $room): Response
     {
@@ -105,7 +111,7 @@ class RoomController extends AbstractController
     }
     
     /**
-     * @Route("/{id}", name="room_delete", methods={"POST"})
+     * @Route("/{id}", name="room_delete", requirements={ "id": "\d+"}, methods={"POST"})
      */
     public function delete(Request $request, Room $room): Response
     {
@@ -122,6 +128,7 @@ class RoomController extends AbstractController
      * Mark a task as current priority in the user's session
      *
      * @Route("/mark/{id}", name="room_mark", requirements={ "id": "\d+"}, methods="GET")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function markAction(Room $room): Response
     {
@@ -140,6 +147,7 @@ class RoomController extends AbstractController
             $urgents = array_diff($urgents, array($id));
             $urgents = $this->get('session')->get('urgents');
         }
+        dump($this->get('session')->get('urgents'));
         return $this->redirectToRoute('room_show',
             ['id' => $room->getId()]);
     }

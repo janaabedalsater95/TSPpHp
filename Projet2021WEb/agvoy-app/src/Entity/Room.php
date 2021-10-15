@@ -241,6 +241,7 @@ class Room
     public function __toString() {
         $owner= $this->getOwner();
         $ownerName = $owner->getName();
-        return $this->summary. " " .$this->description. " ".$this->address. " ". $ownerName   ." (" . $this->id . ")" ;
+        return $this->summary. " " .$this->description.  " ".$this->address. " ". $ownerName   ." (" . $this->id . ")" ;
+ 
     }
 }

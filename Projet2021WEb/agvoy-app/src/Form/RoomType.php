@@ -22,7 +22,8 @@ class RoomType extends AbstractType
             ->add('owner')
             ->add('summary')
             ->add('superficy')
-            
+            ->add('regions')
+            ->add('owner')
             ->add('imageName', TextType::class,  ['disabled' => true])
             ->add('imageFile', VichImageType::class, ['required' => false])
         ;
